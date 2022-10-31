@@ -1,0 +1,131 @@
+<div class="container">
+
+  <div class="d-flex align-items-center p-3 my-3 shadow-sm" style="background-color: rgb(216, 215, 215);">
+    <div class="lh-1">
+      <h1 class="h6 mb-0 text-black lh-1">Datos de la visita</h1>
+    </div>
+  </div>
+
+  <form [formGroup]="formVisita">
+    <div class="row">
+      <div class="col-4">
+        <mat-form-field class="input-string">
+          <mat-label>DNI</mat-label>
+          <input matInput formControlName="dni" type="number" >
+          <mat-error *ngIf="register.hasError('dni') && !register.hasError('required')">Ingrese un DNI válido</mat-error>
+          <mat-error *ngIf="register.hasError('required')">DNI es requerido</mat-error>
+        </mat-form-field>
+      </div>
+      
+      <div class="col-2">
+        <button mat-button class="button-engee" (click)="buscarVisitante()" cdkFocusInitial>Consultar</button>
+      </div>
+      
+      <div class="col-4" *ngIf="nombreVisita != ''">
+        <div>
+          <mat-label style="font-weight: bold;">Nombre y apellido</mat-label>
+        </div>
+        <div>
+          <mat-label >{{ nombreVisita }}</mat-label>
+        </div>
+      </div>
+    </div>
+  </form>
+  <br>
+  <mat-divider></mat-divider>
+  <br>
+
+  <div class="d-flex align-items-center p-3 my-3 shadow-sm" style="background-color: rgb(216, 215, 215);">
+    <div class="lh-1">
+      <h1 class="h6 mb-0 text-black lh-1">Historial de visitas</h1>
+    </div>
+  </div>
+  <form [formGroup]="register">
+    <div class="row">
+      <div class="col-4">
+        <mat-form-field class="input-string">
+          <mat-label>Nro. de tajeta de ingreso</mat-label>
+          <input matInput formControlName="nroTajetaIngreso" type="number" >  
+          <mat-error *ngIf="register.hasError('nroTajetaIngreso') && !register.hasError('required')">Ingrese un Nro. de tarjeta de ingreso válido</mat-error>
+          <mat-error *ngIf="register.hasError('required')">Nro. de tarjeta de ingreso es requerido</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-4">
+        <div><mat-label>Fecha Ingreso</mat-label></div>
+        <div><mat-label>{{ date }}</mat-label></div>
+      </div>
+      <div class="col-4">
+        <div><mat-label>Hora Ingreso</mat-label></div>
+        <div><mat-label>{{ time }}</mat-label></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6">
+        <mat-form-field class="input-string">
+          <mat-label>Sector</mat-label>
+          <mat-select [(ngModel)]="sectorSeleccionado" formControlName="sector" (selectionChange)="cambioSector($event)"> 
+            <mat-option>Seleccionar Sector</mat-option>
+            <mat-option  *ngFor="let item of sectores" [value]="item" >{{item}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-6">
+        <mat-form-field class="input-string">
+          <mat-label>Visita a</mat-label>
+          <mat-select formControlName="visita" [disabled]="empleadosSector.length == 0"> 
+            <mat-option>Seleccionar Empleado</mat-option>
+            <mat-option  *ngFor="let item of empleadosSector" [value]="item" >{{item}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+  
+  <div mat-dialog-actions>
+    <button mat-button class="button-engee" (click)="save()" cdkFocusInitial>Confirmar</button>
+  </div>
+  
+<br>
+  <div class="mt-3">
+    <div class="mat-elevation-z8">
+      <mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="Id">
+          <mat-header-cell  *matHeaderCellDef> ID </mat-header-cell>
+          <mat-cell *matCellDef="let item"> {{ item.id }} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="Fecha">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </mat-header-cell>
+          <mat-cell  *matCellDef="let item"> {{ item.fecha }} </mat-cell>
+        </ng-container>    
+        
+        <ng-container matColumnDef="Hora">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Hora </mat-header-cell>
+          <mat-cell  *matCellDef="let item"> {{ item.hora }} </mat-cell>
+        </ng-container>  
+        
+        <ng-container matColumnDef="VisitoA">
+          <mat-header-cell *matHeaderCellDef mat-sort-header> Visitó a </mat-header-cell>
+          <mat-cell  *matCellDef="let item"> {{ item.visitoA }} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="delete">
+          <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+          <mat-cell *matCellDef="let item" >
+            <a type="button" (click)="delete(item)" > <i class="icon-delete fa fa-minus-circle"></i></a>
+        </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let item; columns: displayedColumns;"></mat-row>
+      
+      </mat-table>
+      
+      <mat-paginator [pageSizeOptions]="[10]" showFirstLastButtons ></mat-paginator>
+    
+    </div>  
+  </div>
+</div>
+
+  
+  
